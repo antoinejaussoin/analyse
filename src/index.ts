@@ -10,7 +10,7 @@ const readline = rl.createInterface({
   output: process.stdout,
 });
 
-const scooter = resolve("./docs/scooter.pdf");
+const scooter = resolve("./docs/home.pdf");
 
 const openai = new OpenAI({
   apiKey: process.env["OPENAI_KEY"],
