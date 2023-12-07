@@ -5,7 +5,6 @@ import { getPdfText } from "./get-pdf";
 import rl from "readline/promises";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { getFiles, saveResult } from "./files";
-import path from "path";
 
 const readline = rl.createInterface({
   input: process.stdin,
@@ -44,11 +43,25 @@ async function handleFile(file: string) {
         `Please parse the following and format it in English in a raw JSON format (not Markdown, just the JSON) with the following properties:\n
         
         {
-          "name": "name of the product",
+          "product_name": "name of the product",
           "brand": "brand of the product",
           "description": "description of the product",
+          "features": [
+            "feature 1",
+            "feature 2",
+            "feature 3"
+          ],
+          "compatibility": {
+            "airplay": true, // or false, or null if unknown
+            "bluetooth": true, // or false, or null if unknown
+            "dolby_atmos": true, // or false, or null if unknown
+            "dts_x": true, // or false, or null if unknown
+            "google_cast": true, // or false, or null if unknown
+            "spotify_connect": true, // or false, or null if unknown
+          },
           "price": {
-              "original" : 100.00
+              "amount" : 100.00, // or null if unknown
+              "currency": "As 3-letter ISO code, for example USD" // or null if unknown
           }
         }
 
@@ -56,11 +69,6 @@ async function handleFile(file: string) {
         ` + pdfContent,
     },
   ];
-  // const chatCompletion = await openai.chat.completions.create({
-  //   messages: [],
-  //   model: "gpt-4-1106-preview",
-  // });
-  // console.log("chatCompletion", chatCompletion.choices[0].message);
 
   const chatCompletion = await openai.chat.completions.create({
     messages: chat,
@@ -72,7 +80,11 @@ async function handleFile(file: string) {
     "Answer: ",
     chalk.green(chatCompletion.choices[0].message.content)
   );
-  await saveResult(file, chatCompletion.choices[0].message.content!);
+  const content = chatCompletion.choices[0].message
+    .content!.split("\n")
+    .slice(1, -1)
+    .join("\n");
+  await saveResult(file, content);
 }
 
 async function chatYourFile(file: string) {
