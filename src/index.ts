@@ -10,7 +10,7 @@ const readline = rl.createInterface({
   output: process.stdout,
 });
 
-const scooter = resolve("./docs/home.pdf");
+const scooter = resolve("./docs/LG-SQC4R.pdf");
 
 const openai = new OpenAI({
   apiKey: process.env["OPENAI_KEY"],
@@ -23,7 +23,7 @@ async function main() {
     {
       role: "system",
       content:
-        "I am a bot that can analyze insurance documents and answer questions about them. The current date is " +
+        "I am a bot that can analyze audio product documents The current date is " +
         new Date().toLocaleDateString(),
     },
     {
@@ -42,7 +42,9 @@ async function main() {
   while (true) {
     const chatCompletion = await openai.chat.completions.create({
       messages: chat,
-      model: "gpt-4-1106-preview",
+      model: "gpt-4-1106-preview"
+      //model: "gpt-3.5-turbo"
+      //model: "gpt-4"
     });
     console.log(
       "Answer: ",
