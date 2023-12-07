@@ -62,19 +62,17 @@ async function handleFile(file: string) {
   // });
   // console.log("chatCompletion", chatCompletion.choices[0].message);
 
-  while (true) {
-    const chatCompletion = await openai.chat.completions.create({
-      messages: chat,
-      model: "gpt-4-1106-preview",
-      //model: "gpt-3.5-turbo"
-      //model: "gpt-4"
-    });
-    console.log(
-      "Answer: ",
-      chalk.green(chatCompletion.choices[0].message.content)
-    );
-    await saveResult(file, chatCompletion.choices[0].message.content!);
-  }
+  const chatCompletion = await openai.chat.completions.create({
+    messages: chat,
+    model: "gpt-4-1106-preview",
+    //model: "gpt-3.5-turbo"
+    //model: "gpt-4"
+  });
+  console.log(
+    "Answer: ",
+    chalk.green(chatCompletion.choices[0].message.content)
+  );
+  await saveResult(file, chatCompletion.choices[0].message.content!);
 }
 
 async function chatYourFile(file: string) {
